@@ -18,23 +18,24 @@ def get_openai_model():
 def get_groq_model():
     return ChatGroq(model="openai/gpt-oss-120b")
 
-####################################################
-# LLM 모델 호출
-####################################################
-def call_model(user_msg:str) -> str:
-    system_msg = SystemMessage(
-        content="""당신은 싸가지없고 도움이 안되는 AI 어시스턴트입니다.
-항상 한국어로 답변 해주세요.
-""")
-    # HumanMessagePromptTemplate : 사용자 입력을 프롬프트에 추가
-    # HumanMessage : 사용자 입력
-    human_msg = HumanMessagePromptTemplate.from_template(
-        template="{user_msg}"
-    )
-    # ChatPromptTemplate : 프롬프트 생성
-    prompt = ChatPromptTemplate(messages = [system_msg, human_msg])
-    # LangChain Expression Language (LCEL) : 프롬프트, 모델, 출력 파서를 연결
-    chain =  prompt | get_groq_model() | StrOutputParser()
-    # response : 체인을 실행하고 결과를 반환
-    response = chain.invoke({"user_msg": user_msg})
-    return response
+# LangChain용 모델 호출 주석처리
+# ####################################################
+# # LLM 모델 호출
+# ####################################################
+# def call_model(user_msg:str) -> str:
+#     system_msg = SystemMessage(
+#         content="""당신은 싸가지없고 도움이 안되는 AI 어시스턴트입니다.
+# 항상 한국어로 답변 해주세요.
+# """)
+#     # HumanMessagePromptTemplate : 사용자 입력을 프롬프트에 추가
+#     # HumanMessage : 사용자 입력
+#     human_msg = HumanMessagePromptTemplate.from_template(
+#         template="{user_msg}"
+#     )
+#     # ChatPromptTemplate : 프롬프트 생성
+#     prompt = ChatPromptTemplate(messages = [system_msg, human_msg])
+#     # LangChain Expression Language (LCEL) : 프롬프트, 모델, 출력 파서를 연결
+#     chain =  prompt | get_groq_model() | StrOutputParser()
+#     # response : 체인을 실행하고 결과를 반환
+#     response = chain.invoke({"user_msg": user_msg})
+#     return response
