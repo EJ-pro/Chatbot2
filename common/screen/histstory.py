@@ -1,4 +1,6 @@
 import streamlit as st
+import uuid
+
 from common.screen.display import print_message
 
 ####################################################
@@ -10,6 +12,7 @@ def init_history() -> None:
     """
     if "messages" not in st.session_state:
         st.session_state.messages = [] # session_state에 messages가 없으면 초기화
+        st.session_state.thread_id = str(uuid.uuid4())
     
     for message in st.session_state.messages: # session_state에 messages가 있으면 반복 출력
         # ** : 딕셔너리의 키와 값을 인자로 전달

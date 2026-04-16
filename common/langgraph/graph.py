@@ -6,7 +6,7 @@ from common.db.checkpointer import get_checkpointer
 ################################################
 # 그래프 생성
 ################################################
-def create_chatbot_graph():
+def create_chatbot_graph(is_checkpointer:bool=True):
     # 그래프 정의
     graph = StateGraph(ChatbotState)
     # 노드 추가
@@ -15,4 +15,7 @@ def create_chatbot_graph():
     graph.add_edge(START, "chatbot_node")
     graph.add_edge("chatbot_node", END)
     # 그래프 컴파일
-    return graph.compile(checkpointer=get_checkpointer())
+    if is_checkpointer:
+        return graph.compile(checkpointer=get_checkpointer())
+    # LangGraph Studio용
+    return graph.compile()
