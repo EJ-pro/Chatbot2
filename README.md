@@ -1,54 +1,55 @@
 # 🤖 AI Multi-Agent Chatbot (Chatbot2)
 
-LangGraph와 Streamlit을 활용한 강력한 멀티 에이전트 챗봇 시스템입니다. 복잡한 워크플로우를 관리하고, 외부 도구(Tavily Search 등)를 통합하여 지능적인 답변을 제공합니다.
+LangGraph와 Streamlit을 활용한 강력한 멀티 에이전트 챗봇 시스템입니다. 현재 LLM 모델 연동 및 기본적인 채팅 인터페이스 구축이 완료되었습니다.
 
 ## ✨ 주요 기능
 
-- **Multi-Agent Workflow**: LangGraph를 사용한 정교한 상태 관리 및 에이전트 간의 협업.
-- **Persistent Memory**: SQLite를 활용하여 대화 내용을 저장하고 복원하는 영구 메모리 기능.
-- **Web Research**: Tavily Search 도구를 통합하여 실시간 웹 정보 검색 및 답변 생성.
-- **Intuitive UI**: Streamlit 기반의 깔끔하고 직관적인 채팅 인터페이스 제공.
+- **Multi-Model Support**: OpenAI(고성능) 및 Groq(고속/무료) 모델 선택적 활용 가능.
+- **LCEL(LangChain Expression Language)**: 프롬프트, 모델, 출력 파서를 체인으로 연결하여 유연한 로직 구현.
+- **Persistent Memory**: SQLite(준비 중) 및 Streamlit `session_state`를 통한 대화 문맥 유지.
+- **Unfriendly Persona**: "싸가지없고 도움이 안 되는" 독특한 컨셉의 AI 어시스턴트 적용.
+- **Intuitive UI**: Streamlit 기반의 현대적인 채팅 인터페이스.
 
 ## 🛠 Tech Stack
 
 - **Frontend**: [Streamlit](https://streamlit.io/)
 - **AI Orchestration**: [LangChain](https://www.langchain.com/), [LangGraph](https://www.langchain.com/langgraph)
-- **LLM**: OpenAI GPT Models
-- **Search Tool**: Tavily API
-- **Database (Persistence)**: SQLite (aiosqlite)
+- **LLM Providers**: OpenAI, Groq
+- **Environment**: Python-dotenv
 
 ## 📁 프로젝트 구조
 
 ```text
 chatbot/
-├── app.py                  # Streamlit 메인 실행 파일
+├── app.py                  # Streamlit 메인 실행 파일 (모델 연동 및 UI)
 ├── common/                 # 공용 모듈 및 기능
-│   ├── db/                 # 데이터베이스 관리 (SQLite 등)
-│   ├── langgraph/          # LangGraph 워크플로우 및 노드 정의
-│   └── screen/             # UI 관련 스크린 모듈 (display, history 등)
-├── requirements.txt        # 의존성 패키지 목록
-└── .env                    # 환경 변수 설정 파일
+│   ├── langgraph/          
+│   │   └── model.py        # LLM 모델 정의 및 호출 로직 (Chain 구현)
+│   ├── screen/             
+│   │   ├── display.py      # 메시지 렌더링 컴포넌트
+│   │   └── histstory.py    # 대화 이력 관리 모듈
+│   └── db/                 # (개발 예정) 데이터베이스 관리
+├── .env                    # API 키 관리 (비공개)
+├── .env.sample             # 환경 변수 설정 샘플
+└── requirements.txt        # 의존성 패키지 목록
 ```
 
 ## 🚀 시작하기
 
-### 1. 환경 설정
-
-먼저 저장소를 클론하고 필요한 패키지를 설치합니다.
+### 1. 환경 설정 및 패키지 설치
 
 ```bash
+# 가상환경 생성 및 활성화 권장
 pip install -r requirements.txt
 ```
 
 ### 2. 환경 변수 설정
 
-`.env` 파일을 생성하고 다음 필수 키들을 추가합니다.
+`.env` 파일을 생성하고 필요한 API 키를 입력합니다. (참고: `.env.sample`)
 
 ```env
 OPENAI_API_KEY=your_openai_api_key
-TAVILY_API_KEY=your_tavily_api_key
-# 선택 사항 (성능 모니터링)
-LANGSMITH_API_KEY=your_langsmith_api_key
+GROQ_API_KEY=your_groq_api_key
 ```
 
 ### 3. 애플리케이션 실행
@@ -59,14 +60,13 @@ streamlit run app.py
 
 ---
 
-## 📝 주요 모듈 설명
+## 📝 주요 구현 상세
 
-### 🎨 UI 및 스크린 (`common/screen`)
-- **`display.py`**: 사용자 및 AI 메시지를 채팅 형식으로 렌더링합니다.
-- **`histstory.py`**: Streamlit의 `session_state`를 초기화하고 이전 대화 기록을 화면에 출력합니다.
+### 🧠 모델 연동 (`common/langgraph/model.py`)
+- `ChatOpenAI`와 `ChatGroq`을 지원합니다.
+- `ChatPromptTemplate`을 사용하여 시스템 명령(Persona)과 사용자 입력을 구조화합니다.
+- `prompt | model | StrOutputParser()` 형태의 LCEL 체인을 통해 응답을 생성합니다.
 
-### 🧠 상태 및 흐름 관리 (`common/langgraph`)
-- 에이전트의 사고 과정과 도구 사용 로직을 정의하는 LangGraph 컴포넌트들이 위치할 공간입니다.
-
-### 💾 데이터베이스 (`common/db`)
-- 대화 내용을 영구적으로 보존하기 위한 SQLite 체크포인터 관련 로직이 포함되어 있습니다.
+### 🎨 인터페이스 (`app.py`, `common/screen/`)
+- `st.chat_input`을 통해 사용자 입력을 받고, `call_model` 함수를 호출하여 AI 답변을 생성합니다.
+- 모든 대화 기록은 `st.session_state`에 저장되어 세션 동안 유지됩니다.
