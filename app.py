@@ -11,7 +11,7 @@ load_dotenv()
 import streamlit as st
 from common.screen.display import print_message
 from common.screen.histstory import init_history
-from common.langgraph.model import call_model
+from common.langgraph.run import response_from_graph
 
 st.title("챗봇")
 
@@ -37,7 +37,7 @@ if question is not None:
     print_message(**user_msg) # 화면에 출력
 
     # assistant 답변을 session_state에 추가
-    response = call_model(user_msg["content"])
+    response = response_from_graph(user_msg["content"])
     ai_msg = {
         "role": "assistant",
         "content": response
