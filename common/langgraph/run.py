@@ -3,6 +3,7 @@ from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplat
 from langchain_core.output_parsers import StrOutputParser
 
 from common.langgraph.graph import create_chatbot_graph
+import streamlit as st
 
 ################################################
 # LangGraph 실행
@@ -10,4 +11,5 @@ from common.langgraph.graph import create_chatbot_graph
 def response_from_graph(user_msg:str) -> str:
     chat_graph = create_chatbot_graph()
     response = chat_graph.invoke({"messages":[HumanMessage(content=user_msg)]})
+
     return response["messages"][-1].content
