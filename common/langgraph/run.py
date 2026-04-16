@@ -10,4 +10,4 @@ from common.langgraph.graph import create_chatbot_graph
 def response_from_graph(user_msg:str) -> str:
     chat_graph = create_chatbot_graph()
     response = chat_graph.invoke({"messages":[HumanMessage(content=user_msg)]})
-    return response[-1].content
+    return response["messages"][-1].content
