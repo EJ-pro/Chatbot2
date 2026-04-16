@@ -4,6 +4,7 @@ python-dotenv==1.1.1        # 환경 변수 관리
 
 # 모델별 패키지
 langchain-openai==1.0.1     # OpenAI 모델 통합
+langchain-groq==1.0.0     # Groq 모델 통합
 
 # LangChain 패키지
 langchain==1.0.2 # LangChain 메인 패키지

@@ -1,6 +1,17 @@
+####################################################
+# 환경변수 등록
+####################################################
+from dotenv import load_dotenv
+
+load_dotenv()
+
+####################################################
+# Streamlit 애플리케이션
+####################################################
 import streamlit as st
 from common.screen.display import print_message
 from common.screen.histstory import init_history
+from common.langgraph.model import call_model
 
 st.title("챗봇")
 
@@ -18,18 +29,18 @@ question = st.chat_input("질문을 입력해주세요")
 
 if question is not None:
     # 사용자 질문을 session_state에 추가
-    msg = {
+    user_msg = {
         "role": "user",
         "content": question
     }
-    st.session_state.messages.append(msg) # session_state에 추가
-    print_message(**msg) # 화면에 출력
+    st.session_state.messages.append(user_msg) # session_state에 추가
+    print_message(**user_msg) # 화면에 출력
 
     # assistant 답변을 session_state에 추가
-    msg = {
+    response = call_model(user_msg["content"])
+    ai_msg = {
         "role": "assistant",
-        "content": "답변"
+        "content": response
     }
-    st.session_state.messages.append(msg) # session_state에 추가
-    print_message(**msg) # 화면에 출력
-
+    st.session_state.messages.append(ai_msg) # session_state에 추가
+    print_message(**ai_msg) # 화면에 출력
