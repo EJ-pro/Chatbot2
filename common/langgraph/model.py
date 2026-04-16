@@ -16,7 +16,7 @@ def get_openai_model():
 # Groq 모델 (속도가 빠름) + API 비용 없음
 ####################################################
 def get_groq_model():
-    return ChatGroq(model="llama3-70b-8192")
+    return ChatGroq(model="openai/gpt-oss-120b")
 
 ####################################################
 # LLM 모델 호출
